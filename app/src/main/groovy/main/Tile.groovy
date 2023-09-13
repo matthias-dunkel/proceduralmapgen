@@ -10,13 +10,25 @@ enum TileType {
     NOTHING,
 }
 
+class TileId {
+    int x
+    int y
+    
+    TileId(int x, int y) {
+        this.x = x
+        this.y = y
+    }
+}
+
 class Tile {
     int x;
     int y;
-    private Set<TileType> options;
-    private TileType type;
+    TileId id;
+    Set<TileType> options;
+    TileType type;
 
     Tile(int x, int y) {
+        this.id = new TileId(x,y)
         this.x = x;
         this.y = y;
         this.type = TileType.NOTHING
@@ -45,7 +57,7 @@ class Tile {
     void collapse() {
         if(this.entropy() > 0){
             this.type = this.options.toList()[Math.round(Math.random() * (this.entropy() -1))]
-        } 
+        }
     }
 
     boolean update(Tile collapsed, Rule[] rules) {
