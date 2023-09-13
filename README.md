@@ -1,5 +1,7 @@
 # Procedural Map Generation
-Inspired by the Wave Function Collapse Algorithm, this project investigates how to generate simple maps with rulesets.
-The project comes with Renderers or Visualizers.
+Inspired by the Wave Function Collapse Algorithm, this project delves into the generation of simple maps using rulesets.
 
-To run you need gradle and groovy. Run `gradle run` to generate a map. The Generation is nicely animated.
+The project includes renderers and visualizers.
+
+To run it, you'll need Gradle and Groovy. Execute gradle run to generate a map. The generation process is beautifully animated.
+
