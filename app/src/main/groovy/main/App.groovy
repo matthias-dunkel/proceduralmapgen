@@ -4,11 +4,11 @@
 package main
 
 class App {
-    
+  
     static void main(String[] args) {
-        def WIDTH = 50;
-        def HEIGHT = 50;
-        def SCALE = 10;
+        def WIDTH = 20;
+        def HEIGHT = 20;
+        def SCALE = 15;
 
         def b = new Board(WIDTH,HEIGHT);
         def r = [
@@ -18,7 +18,7 @@ class App {
             new Rule(TileType.STONE, TileType.STONE),
             new Rule(TileType.MOUNTAIN_TOP, TileType.MOUNTAIN_TOP),
             new Rule(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_BOTTOM),
-            
+            //
             new Rule(TileType.WATER, TileType.SAND),
             new Rule(TileType.SAND, TileType.STONE),
             new Rule(TileType.WATER, TileType.FOREST),
@@ -26,11 +26,11 @@ class App {
             new Rule(TileType.STONE, TileType.MOUNTAIN_BOTTOM),
             new Rule(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_TOP)
         ]
-
-        def renderer = new Renderer(WIDTH * SCALE,HEIGHT * SCALE, SCALE, b, r as Rule[])
+        def stepwise = new StepWise(WIDTH * SCALE,HEIGHT * SCALE, SCALE, b, r as Rule[])
+        def finished = new Finished(WIDTH * SCALE,HEIGHT * SCALE, SCALE, b, r as Rule[])
+        def renderer = new Renderer(stepwise)
 
         renderer.setUpGui()
 
-        
     }
 }
