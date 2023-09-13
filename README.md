@@ -3,5 +3,5 @@ Inspired by the Wave Function Collapse Algorithm, this project delves into the g
 
 The project includes renderers and visualizers.
 
-To run it, you'll need Gradle and Groovy. Execute gradle run to generate a map. The generation process is beautifully animated.
+To run it, you'll need Gradle and Groovy. Execute `gradle run` to generate a map. The generation process is beautifully animated.
 
