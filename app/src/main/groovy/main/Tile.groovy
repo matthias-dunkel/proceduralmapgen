@@ -18,6 +18,14 @@ class TileId {
         this.x = x
         this.y = y
     }
+
+    String toString() {
+        return "TileId($this.x, $this.y)"
+    }
+
+    boolean equals(other){
+        return this.x == other.x && this.y == other.y
+    }
 }
 
 class Tile {
@@ -42,6 +50,12 @@ class Tile {
             ]
     }
 
+    String toString(){
+        return "Tile( $this.id, $this.type, $this.options)"
+    }
+
+   
+
     TileType type(){
         return this.type
     }
@@ -54,10 +68,17 @@ class Tile {
         return this.type != TileType.NOTHING
     }
 
-    void collapse() {
+    boolean collapse() {
         if(this.entropy() > 0){
             this.type = this.options.toList()[Math.round(Math.random() * (this.entropy() -1))]
+            return true
         }
+
+        if(!isCollapsed()){
+            throw new RuntimeException("Tile: $id cannot collapse, because no options are left.")
+        }
+
+        return false;
     }
 
     boolean update(Tile collapsed, Rule[] rules) {
@@ -74,7 +95,6 @@ class Tile {
         def prev = this.options.size()
         this.options = this.options.intersect(possible)
 
-       
         if(this.options.size() == 0) {
             throw new RuntimeException("No Options left. Rules are too strict.")
         }

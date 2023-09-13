@@ -1,11 +1,12 @@
 package main 
 
 class Board {
+
     int width
     int height
-    ArrayList<Integer> tilesSorted
+    ArrayList<TileId> tilesSorted
     int numberOfCollapsed
-
+    
     private ArrayList<Tile> tiles
     
     Board(int width, int height){
@@ -13,110 +14,132 @@ class Board {
         this.height = height;
         this.tiles = (0..width*height -1).collect{ 
                 def c = convertIndexToCoord(it);
-                new Tile(c[0], c[1]) 
+                new Tile(c.x, c.y) 
             }
-        this.tilesSorted = (0..width*height -1).collect {
-            it
+        this.tilesSorted = this.tiles.collect {
+            it.id
         }
+
         this.numberOfCollapsed = 0;
     }
 
-    Tuple2<Integer, Integer> convertIndexToCoord(int id) {
-        int x = id / this.width
-        int y = id % this.width
+    TileId convertIndexToCoord(int id) {
+        int y = id / this.width
+        int x = id % this.width
 
-        return new Tuple(x,y)
+        return new TileId(x, y)
     }
 
-    Tile getAt(int row, int col){
-        if(row >= this.height || col >= this.width) {
+    Tile getAt(TileId id){
+        
+        if(id.y >= this.height || id.x >= this.width) {
+            throw new IndexOutOfBoundsException("No tile with id: $id for Board with dimensions: $this.width x $this.height")
+        }
+        
+        def tile = this.tiles[id.y * this.width + id.x]
+        
+        if(id != tile.id) {
+            throw new RuntimeException("Tiles are not stored correctly in Board. Searched for: $id, got: $tile.id")
+        }
+        return tile
+    }
+
+    void setAt(TileId id, TileType val){
+        if(id.y >= this.height || id.x >= this.width) {
             throw new IndexOutOfBoundsException("Row Index: $row, Row Size: ${this.height}; Col Index: $col, Col size: ${this.width}")
         }
-        return this.tiles[row * this.width + col]
+
+        this.tiles[id.y * this.width + id.x] = val       
     }
 
-    void setAt(int row, int col, TileType val){
-        if(row >= this.height || col >= this.width) {
-            throw new IndexOutOfBoundsException("Row Index: $row, Row Size: ${this.height}; Col Index: $col, Col size: ${this.width}")
-        }
+    Tile lowestEntropy() {
+        this.sortTiles()
 
-        this.tiles[row * this.width + col] = val       
+        def id = this.tilesSorted[0]
+        def tile = this.getAt(id)
+
+        return tile
     }
 
-    int lowestEntropy() {
-        def i = 0;
-        while(i < this.tilesSorted.size()){
-            if(!this.tiles[tilesSorted[i]].isCollapsed()){
-                return this.tilesSorted[i]
-            }
-            i++
+    void removeFirstFromSorted() {
+        if(this.tilesSorted.size() > 0){
+            this.tilesSorted.remove(0)
         }
-
-        return this.tilesSorted[0]
     }
 
     void sortTiles() {
-        this.tilesSorted = this.tilesSorted.sort { this.tiles[it] }
+        this.tilesSorted = this.tilesSorted.sort { this.getAt(it).entropy() }
     }
 
-    void updateNeighbours(int id, Rule[] rules) {
-        def c = this.convertIndexToCoord(id)
+    ArrayList<TileId> getNeighbours(TileId id) {
+        ArrayList<TileId> neighbours = []
+      
+        if(id.x -1 >= 0) { 
+            neighbours.add(new TileId(id.x -1, id.y))
+        }
+        if(id.y -1 >= 0) { 
+            neighbours.add(new TileId(id.x, id.y -1))
+        }
+        if(id.x + 1 < this.width){ 
+           neighbours.add(new TileId(id.x +1, id.y))
+        }
+        if(id.y + 1 < this.height){
+            neighbours.add(new TileId(id.x, id.y +1))
+        }
 
-        updateNeighbours(c[0], c[1], rules)
+        return neighbours
     }
 
-    void updateNeighbours(int row, int col, Rule[] rules) {
-        def q = [this.getAt(row, col)] as Queue
+    ArrayList<TileId> updateNeighbours(TileId id, Rule[] rules) {
 
-        while(q.size() > 0){
+        ArrayList<TileId> updated = []
+
+        def q = [this.getAt(id)] as Queue
+
+        while(q.size() > 0) {
+
             def collapsed = q.poll()
-            def neighbours = []
-
-            if(col -1 >= 0) {
-                neighbours.add(this.getAt(row, col -1))
-            }
-
-            if(row -1 >= 0) {
-                neighbours.add(this.getAt(row -1, col))
-            }
-
-            if(col + 1 < this.height){
-               neighbours.add(this.getAt(row, col +1))
-            }
-
-            if(row + 1 < this.width){
-                neighbours.add(this.getAt(row + 1, col))
-            }
-
-            neighbours.collect { tile ->
+            
+            def neighbours = getNeighbours(collapsed.id)
+            
+            neighbours.collect { n ->
+                def tile = this.getAt(n)
                 def didUpdate = tile.update(collapsed, rules)
-
+                //didUpdate = false;
                 if(didUpdate){
-                    q << tile
+                    if(!updated.contains(tile.id) && !tile.isCollapsed()){
+                         q << tile
+                    }
+                    updated.add(tile.id)
                 }
             } 
         }
-        
-        
+
+        return updated
     }
 
     boolean hasSteps() {
         return this.numberOfCollapsed < this.width * this.height
     }
 
-    Tile step(Rule[] rules) {
-        if(!this.hasSteps()){
+    Tile stepForward(Rule[] rules) {
+        if(!this.hasSteps()) {
             throw new RuntimeException("No Steps to go. All tiles collapsed.")
         }
 
-        def minId = this.lowestEntropy()
-        def minTile = this.tiles[ minId  ];
-        minTile.collapse()
+        def minTile = this.lowestEntropy()
+        def didCollapse = minTile.collapse()
+        if(didCollapse) {
+            removeFirstFromSorted()
+        }
 
         this.numberOfCollapsed++
-        this.updateNeighbours(minId, rules)
-        this.sortTiles()
-
+        this.updateNeighbours(minTile.id, rules)
+        
         return minTile
+    }   
+
+    Tile step(Rule[] rules) {
+        return this.stepForward(rules)
     }
 }
