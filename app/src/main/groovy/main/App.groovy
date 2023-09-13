@@ -31,6 +31,7 @@ class App {
         def renderer = new Renderer(stepwise)
 
         renderer.setUpGui()
+       // b.step(r as Rule[])
 
     }
 }

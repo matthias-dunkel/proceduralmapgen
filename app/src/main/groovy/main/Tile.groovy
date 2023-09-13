@@ -28,6 +28,70 @@ class TileId {
     }
 }
 
+class TileFrequency {
+    Map m;
+    int n;
+    
+    TileFrequency(){
+        this.m = [:]
+        this.n = 0
+    }
+
+    TileFrequency(ArrayList<Tuple2<TileId, Integer>> f) {
+        for(t in f){
+            this.m[t[0]] = t[1]
+        }
+    }
+
+    String toString() {
+        def r = "TileFrequency( n: $this.n \n"
+        for (mi in m) {
+            r += "  $mi.key : $mi.value\n"
+        }
+        return r + ")\n"
+    }
+
+    int add(TileType t) {
+        if(m[t] == null) {
+            m[t] = 1
+            this.n++
+        }
+        return ++m[t]
+    }
+
+    int get(TileType t) {
+        if(m[t] == null) {
+            m[t] = 1
+            this.n++
+        }
+        return m[t]
+    }
+
+    void set(TileType t, int v) {
+        if(m[t] != null) {
+            this.n -= m[t]
+        }
+        m[t] = v;
+        this.n += v;
+    }
+
+    int frequencyOf(TileType t) {
+        return m[t] / this.n
+    }
+
+    TileType chooseRandomly() {
+        def i = Math.random() * this.n;
+        println(i)
+        def sum = 0;
+        for(entry in m) {
+            sum += entry.value
+            if(sum >= i ) {
+                return entry.key;
+            }
+        }
+    }
+}
+
 class Tile {
     int x;
     int y;
@@ -54,8 +118,6 @@ class Tile {
         return "Tile( $this.id, $this.type, $this.options)"
     }
 
-   
-
     TileType type(){
         return this.type
     }
@@ -68,13 +130,20 @@ class Tile {
         return this.type != TileType.NOTHING
     }
 
-    boolean collapse() {
-        if(this.entropy() > 0){
-            this.type = this.options.toList()[Math.round(Math.random() * (this.entropy() -1))]
+    boolean collapse(TileFrequency f) {
+        if(this.entropy() > 0) {
+            def tf = new TileFrequency()
+
+            for (o in this.options) {
+                tf.set(o, f.get(o))
+            }
+
+            this.type = tf.chooseRandomly()
+            
             return true
         }
 
-        if(!isCollapsed()){
+        if(!this.isCollapsed()){
             throw new RuntimeException("Tile: $id cannot collapse, because no options are left.")
         }
 

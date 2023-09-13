@@ -8,6 +8,7 @@ class Board {
     int numberOfCollapsed
     
     private ArrayList<Tile> tiles
+    private TileFrequency f;
     
     Board(int width, int height){
         this.width = width;
@@ -19,6 +20,8 @@ class Board {
         this.tilesSorted = this.tiles.collect {
             it.id
         }
+
+        this.f = new TileFrequency()
 
         this.numberOfCollapsed = 0;
     }
@@ -128,9 +131,10 @@ class Board {
         }
 
         def minTile = this.lowestEntropy()
-        def didCollapse = minTile.collapse()
+        def didCollapse = minTile.collapse(this.f)
         if(didCollapse) {
             removeFirstFromSorted()
+            this.f.add(minTile.type())
         }
 
         this.numberOfCollapsed++
