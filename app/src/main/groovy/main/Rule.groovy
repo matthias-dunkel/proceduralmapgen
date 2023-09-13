@@ -15,19 +15,29 @@ class Rule {
         this.tile2 = t2;
     }
 
+    Set<TileType> apply(TileType type) {
+        if(type == this.tile1) {
+            return [this.tile2] as Set
+        } 
+    
+        if(type == this.tile2) {
+            return [this.tile1] as Set
+        }
+        return [] as Set
+    }   
+
     Set<TileType> apply(Tile tile) {
         if(tile.isCollapsed()){
-            if(tile.type() == this.tile1) {
-                return [this.tile2] as Set
-            } 
-        
-            if(tile.type() == this.tile2) {
-                return [this.tile1] as Set
-            }
-
-            return [] as Set
+            return apply(tile.type())
         }
-        return tile.options.intersect([this.tile1, this.tile2] as Set)
+        
+        def newOptions = []
+
+        for(o in tile.options) {
+            newOptions = newOptions.plus(apply(o))
+        }
+
+        return newOptions
     }
 }
 
