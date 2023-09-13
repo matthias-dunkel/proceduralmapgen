@@ -3,9 +3,10 @@ package main
 class Board {
     int width
     int height
-    ArrayList<Tile> tiles;
-    ArrayList<Integer> tilesSorted;
-    int numberOfCollapsed;
+    ArrayList<Integer> tilesSorted
+    int numberOfCollapsed
+
+    private ArrayList<Tile> tiles
     
     Board(int width, int height){
         this.width = width;
@@ -42,8 +43,6 @@ class Board {
         this.tiles[row * this.width + col] = val       
     }
 
-    // TODO: Optimize this step. As it is takes O(n) to find the minimum.
-    // Also if several Tiles have the same entropy then on eshould be randomly picked.
     int lowestEntropy() {
         def i = 0;
         while(i < this.tilesSorted.size()){
@@ -68,37 +67,36 @@ class Board {
 
     void updateNeighbours(int row, int col, Rule[] rules) {
         def q = [this.getAt(row, col)] as Queue
-        while(q.size() > 0) {
-            def collapsed = q.poll();
-            
-            if(col - 1 > 0) {
-                def tile = this.getAt(row, col-1)
-            }
-        
-        def left;
-        def top;
-        def right;
-        def bottom;
-        for(int rowN = row - 1; rowN <= row + 1; rowN++) {
-            if(rowN < this.height && rowN >= 0) {
-                for(int colN = col -1; colN < col + 2; colN++) {
-                    
-                    if(colN == col && rowN == row) {
-                        continue;
-                    }
 
-                    if(colN >= 0 && colN < this.width) {
-                        def tile = this.getAt(rowN, colN);
-                        def didUpdate = tile.update(collapsed, rules)
-                        
-                        if(didUpdate){
-                            q << tile
-                        }
-                    }
-                }
+        while(q.size() > 0){
+            def collapsed = q.poll()
+            def neighbours = []
+
+            if(col -1 >= 0) {
+                neighbours.add(this.getAt(row, col -1))
             }
+
+            if(row -1 >= 0) {
+                neighbours.add(this.getAt(row -1, col))
+            }
+
+            if(col + 1 < this.height){
+               neighbours.add(this.getAt(row, col +1))
+            }
+
+            if(row + 1 < this.width){
+                neighbours.add(this.getAt(row + 1, col))
+            }
+
+            neighbours.collect { tile ->
+                def didUpdate = tile.update(collapsed, rules)
+
+                if(didUpdate){
+                    q << tile
+                }
+            } 
         }
-        }
+        
         
     }
 
@@ -114,8 +112,6 @@ class Board {
         def minId = this.lowestEntropy()
         def minTile = this.tiles[ minId  ];
         minTile.collapse()
-
-        println("Type of Collapsed: $minTile.type")
 
         this.numberOfCollapsed++
         this.updateNeighbours(minId, rules)
