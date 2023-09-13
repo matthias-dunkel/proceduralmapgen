@@ -4,11 +4,33 @@
 package main
 
 class App {
-    String getGreeting() {
-        return 'Hello World!'
-    }
-
+    
     static void main(String[] args) {
-        println new App().greeting
+        def WIDTH = 50;
+        def HEIGHT = 50;
+        def SCALE = 10;
+
+        def b = new Board(WIDTH,HEIGHT);
+        def r = [
+            new Rule(TileType.SAND, TileType.SAND),
+            new Rule(TileType.FOREST, TileType.FOREST),
+            new Rule(TileType.WATER, TileType.WATER),
+            new Rule(TileType.STONE, TileType.STONE),
+            new Rule(TileType.MOUNTAIN_TOP, TileType.MOUNTAIN_TOP),
+            new Rule(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_BOTTOM),
+            
+            new Rule(TileType.WATER, TileType.SAND),
+            new Rule(TileType.SAND, TileType.STONE),
+            new Rule(TileType.WATER, TileType.FOREST),
+            new Rule(TileType.FOREST, TileType.STONE),
+            new Rule(TileType.STONE, TileType.MOUNTAIN_BOTTOM),
+            new Rule(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_TOP)
+        ]
+
+        def renderer = new Renderer(WIDTH * SCALE,HEIGHT * SCALE, SCALE, b, r as Rule[])
+
+        renderer.setUpGui()
+
+        
     }
 }
