@@ -6,14 +6,46 @@ package main
 import spock.lang.Specification
 
 class AppTest extends Specification {
-    def "application has a greeting"() {
+    def "calculate correct id"(){
         setup:
-        def app = new App()
+        Board b = new Board(2,3)
 
         when:
-        def result = app.greeting
-
+            def r1 = b.convertIndexToCoord(0)
+            def r2 = b.convertIndexToCoord(1)
+            def r3 = b.convertIndexToCoord(2)
+            def r4 = b.convertIndexToCoord(3)
+            def r5 = b.convertIndexToCoord(4)
+            def r6 = b.convertIndexToCoord(5)
         then:
-        result != null
+            r1 == new TileId(0,0) &&
+            r2 == new TileId(1,0) &&
+            r3 == new TileId(0,1) &&
+            r4 == new TileId(1,1) &&
+            r5 == new TileId(0,2) &&
+            r6 == new TileId(1,2) 
+    }
+
+    def "getAt works"(){
+        setup:
+        Board b = new Board(2,3)
+
+        when:
+            def result = b.getAt(new TileId(0, 0))
+        then:
+            result.id == new TileId(0,0)
+    }
+
+    def "TileId equals works"(){
+        setup:
+            TileId id1 = new TileId(1,0)
+            TileId id2 = new TileId(1,0)
+            TileId id3 = new TileId(0,0)
+
+        when:
+            def r1 = id1 == id2
+            def r2 = id2 == id3
+        then:
+            r1 && !r2
     }
 }
