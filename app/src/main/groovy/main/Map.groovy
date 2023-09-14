@@ -90,56 +90,5 @@ class Map {
         return neighbours
     }
 
-    ArrayList<TileId> updateNeighbours(TileId id, Rule[] rules) {
-
-        ArrayList<TileId> updated = []
-
-        def q = [this.getAt(id)] as Queue
-
-        while(q.size() > 0) {
-
-            def collapsed = q.poll()
-            
-            def neighbours = getNeighbours(collapsed.id)
-            
-            neighbours.collect { n ->
-                def tile = this.getAt(n)
-                def didUpdate = tile.update(collapsed, rules)
-                //didUpdate = false;
-                if(didUpdate){
-                    if(!updated.contains(tile.id) && !tile.isCollapsed()){
-                         q << tile
-                    }
-                    updated.add(tile.id)
-                }
-            } 
-        }
-
-        return updated
-    }
-
-    boolean hasSteps() {
-        return this.numberOfCollapsed < this.width * this.height
-    }
-
-    Tile stepForward(Rule[] rules) {
-        if(!this.hasSteps()) {
-            throw new RuntimeException("No Steps to go. All tiles collapsed.")
-        }
-
-        def minTile = this.lowestEntropy()
-        def didCollapse = minTile.collapse()
-        if(didCollapse) {
-            removeFirstFromSorted()
-        }
-
-        this.numberOfCollapsed++
-        this.updateNeighbours(minTile.id, rules)
-        
-        return minTile
-    }   
-
-    Tile step(Rule[] rules) {
-        return this.stepForward(rules)
-    }
+    
 }

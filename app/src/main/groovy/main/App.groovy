@@ -10,8 +10,8 @@ class App {
         def HEIGHT = 20;
         def SCALE = 15;
 
-        def b = new Map(WIDTH,HEIGHT);
-        def r = [
+        Map map = new Map(WIDTH,HEIGHT);
+        Rule[] r = [
             new Rule(TileType.SAND, TileType.SAND),
             new Rule(TileType.FOREST, TileType.FOREST),
             new Rule(TileType.WATER, TileType.WATER),
@@ -25,10 +25,12 @@ class App {
             new Rule(TileType.FOREST, TileType.STONE),
             new Rule(TileType.STONE, TileType.MOUNTAIN_BOTTOM),
             new Rule(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_TOP)
-        ]
-        def stepwise = new StepWise(WIDTH * SCALE,HEIGHT * SCALE, SCALE, b, r as Rule[])
-        def finished = new Finished(WIDTH * SCALE,HEIGHT * SCALE, SCALE, b, r as Rule[])
-        def renderer = new Renderer(stepwise)
+        ] 
+
+        def gen = new Generator(map, r)
+        def stepwise = new StepWise(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
+        def finished = new Finished(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
+        def renderer = new Renderer(finished)
 
         renderer.setUpGui()
 

@@ -10,15 +10,13 @@ abstract class MapDrawer extends JPanel {
     int height;
     int scale;
     
-    protected Map map;
-    protected Rule[] rules;
+    protected Generator gen;
 
-    MapDrawer(int width, int height, int scale, Map map, Rule[] rules){
+    MapDrawer(int width, int height, int scale, Generator gen){
         this.width = width
         this.height = height
         this.scale = scale
-        this.map = map
-        this.rules = rules
+        this.gen = gen
     }
 
     Color getColor(TileType type) {
@@ -49,8 +47,8 @@ abstract class MapDrawer extends JPanel {
 abstract class BufferedDrawer extends MapDrawer {
     private BufferedImage image;
 
-    BufferedDrawer(int width, int height, int scale, Map map, Rule[] rules) {
-       super(width, height,scale, map,rules)
+    BufferedDrawer(int width, int height, int scale, Generator gen) {
+       super(width, height,scale, gen)
 
        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
     }
@@ -74,15 +72,15 @@ abstract class BufferedDrawer extends MapDrawer {
 
 class Finished extends BufferedDrawer {
     
-    Finished(int width, int height, int scale, Map map, Rule[] rules) {
-       super(width, height,scale, map,rules)
+    Finished(int width, int height, int scale, Generator gen) {
+       super(width, height,scale, gen)
     }
 
     void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        while(map.hasSteps()) {
-            paintToBuffer(map.step(this.rules))
+        while(this.gen.hasSteps()) {
+            paintToBuffer(this.gen.step())
         }
 
         drawBuffer(g)
@@ -92,8 +90,8 @@ class Finished extends BufferedDrawer {
 class StepWise extends BufferedDrawer implements ActionListener {
     private Timer timer;
 
-    StepWise(int width, int height, int scale, Map map, Rule[] rules) {
-        super(width, height,scale, map,rules)
+    StepWise(int width, int height, int scale, Generator gen) {
+        super(width, height,scale, gen)
 
         this.timer = new Timer(0, this)
 
@@ -106,12 +104,12 @@ class StepWise extends BufferedDrawer implements ActionListener {
     }
 
     void actionPerformed(ActionEvent e) {
-        if(!this.map.hasSteps()){
+        if(!this.gen.hasSteps()){
             this.timer.stop()
             return;
         }
 
-        def tile = this.map.step(this.rules)
+        def tile = this.gen.step()
         paintToBuffer(tile)
         repaint();
     }
