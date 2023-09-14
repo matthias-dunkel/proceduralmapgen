@@ -48,4 +48,62 @@ class AppTest extends Specification {
         then:
             r1 && !r2
     }
+
+    def "getNeighbours worls"(){
+        setup:
+            def map = new Map(3,3)
+        
+        when:
+            def middleN = map.getNeighbours(new TileId(1,1))
+            def upperCorner = map.getNeighbours(new TileId(0,0))
+        
+        then:
+            middleN == [
+                new Tuple2(new TileId(0,1), Orientation.LEFT),
+                new Tuple2(new TileId(1,0), Orientation.TOP),
+                new Tuple2(new TileId(2,1), Orientation.RIGHT),
+                new Tuple2(new TileId(1,2), Orientation.BOTTOM)
+            ]
+            &&
+            upperCorner == [
+                new Tuple2(new TileId(1,0), Orientation.RIGHT),
+                new Tuple2(new TileId(0,1), Orientation.BOTTOM),
+            ]
+    }
+
+    def "Rule application works"(){
+        setup:
+            def r = new Rule(TileType.SAND, TileType.SAND, Orientation.LEFT)
+
+        when:
+            def result = r.apply(TileType.SAND, TileType.SAND, Orientation.LEFT)
+            def result2 = r.apply(TileType.SAND, TileType.FOREST, Orientation.LEFT)
+        
+        then:
+            result == [TileType.SAND] as Set 
+            result2 == [] as Set
+    }
+
+    def "Tile update works correctly"(){
+        setup:
+            def t1 = new Tile(0,0)
+            def t2 = new Tile(0,1)
+            def t3 = new Tile(0,2)
+            def rg = new RuleSetGenerator()
+            Rule[] ALL_TILES_ALLOWED = 
+                rg.allowAllOrientations(TileType.SAND, TileType.SAND) +
+                rg.allowAllOrientations(TileType.WATER, TileType.WATER) +
+                rg.allowAllOrientations(TileType.FOREST, TileType.FOREST) +
+                rg.allowAllOrientations(TileType.STONE, TileType.STONE) +
+                rg.allowAllOrientations(TileType.MOUNTAIN_TOP, TileType.MOUNTAIN_TOP) +
+                rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_BOTTOM)
+        
+        when:
+            t1.collapse()
+            t2.update(t1, Orientation.RIGHT, ALL_TILES_ALLOWED)
+            t3.update(t2, Orientation.RIGHT, ALL_TILES_ALLOWED)
+        
+        then:
+            t2.entropy() == 1 && t3.entropy() == 1
+    }
 }
