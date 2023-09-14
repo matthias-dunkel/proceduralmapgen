@@ -6,25 +6,20 @@ package main
 class App {
   
     static void main(String[] args) {
-        def WIDTH = 3;
-        def HEIGHT = 3;
+        def WIDTH = 20;
+        def HEIGHT = 20;
         def SCALE = 15;
 
         Map map = new Map(WIDTH,HEIGHT);
         RuleSetGenerator rg = new RuleSetGenerator();
-        Rule[] r = 
-            rg.allowAllOrientations(TileType.SAND, TileType.SAND) +
-            rg.allowAllOrientations(TileType.WATER, TileType.WATER) +
-            rg.allowAllOrientations(TileType.FOREST, TileType.FOREST) +
-            rg.allowAllOrientations(TileType.STONE, TileType.STONE) +
-            rg.allowAllOrientations(TileType.MOUNTAIN_TOP, TileType.MOUNTAIN_TOP) +
-            rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_BOTTOM) +
-            rg.allowAllOrientations(TileType.WATER, TileType.SAND) +
-            rg.allowAllOrientations(TileType.SAND, TileType.STONE) +
-            rg.allowAllOrientations(TileType.WATER, TileType.FOREST) +
-            rg.allowAllOrientations(TileType.FOREST, TileType.STONE) +
-            rg.allowAllOrientations(TileType.STONE, TileType.MOUNTAIN_BOTTOM) 
-            rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_TOP) 
+        Rule[] r = rg.allowAllOrientations([
+            TileType.SAND, 
+            TileType.WATER, 
+            TileType.FOREST,
+            TileType.STONE,
+            TileType.MOUNTAIN_TOP,
+            TileType.MOUNTAIN_BOTTOM
+            ])
         
         def gen = new Generator(map, r)
         def stepwise = new StepWise(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
