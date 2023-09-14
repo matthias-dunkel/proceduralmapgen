@@ -31,9 +31,9 @@ class Generator {
             neighbours.collect { n ->
                 def tile = this.map.getAt(n[0])
                 def didUpdate = tile.update(collapsed, n[1], this.rules)
-                
+
                 if(didUpdate){
-                    if(!updated.contains(tile.id) && !tile.isCollapsed()){
+                    if(!updated.contains(tile.id) && !tile.isCollapsed() && updated.size() <= 50){
                          q << tile
                     }
                     updated.add(tile.id)
