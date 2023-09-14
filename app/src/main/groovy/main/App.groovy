@@ -6,8 +6,8 @@ package main
 class App {
   
     static void main(String[] args) {
-        def WIDTH = 20;
-        def HEIGHT = 20;
+        def WIDTH = 3;
+        def HEIGHT = 3;
         def SCALE = 15;
 
         Map map = new Map(WIDTH,HEIGHT);
@@ -19,14 +19,13 @@ class App {
             rg.allowAllOrientations(TileType.STONE, TileType.STONE) +
             rg.allowAllOrientations(TileType.MOUNTAIN_TOP, TileType.MOUNTAIN_TOP) +
             rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_BOTTOM) +
-            rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_TOP) +
-            [
-                new Rule(TileType.SAND, TileType.WATER, Orientation.RIGHT),
-                new Rule(TileType.WATER, TileType.FOREST, Orientation.RIGHT),
-                new Rule(TileType.FOREST, TileType.STONE, Orientation.RIGHT),
-                new Rule(TileType.STONE, TileType.MOUNTAIN_BOTTOM, Orientation.RIGHT)
-            ]
-
+            rg.allowAllOrientations(TileType.WATER, TileType.SAND) +
+            rg.allowAllOrientations(TileType.SAND, TileType.STONE) +
+            rg.allowAllOrientations(TileType.WATER, TileType.FOREST) +
+            rg.allowAllOrientations(TileType.FOREST, TileType.STONE) +
+            rg.allowAllOrientations(TileType.STONE, TileType.MOUNTAIN_BOTTOM) 
+            rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_TOP) 
+        
         def gen = new Generator(map, r)
         def stepwise = new StepWise(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
         def finished = new Finished(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
