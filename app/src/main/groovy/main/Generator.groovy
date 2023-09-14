@@ -4,12 +4,12 @@ class Generator {
 
     Map map
     Rule[] rules
-    int numberOfCollapsed;
+    int numberOfCollapsed
 
     Generator(Map map, Rule[] rules) {
         this.map = map
         this.rules = rules
-        this.numberOfCollapsed = 0;
+        this.numberOfCollapsed = 0
     }
 
     boolean hasSteps() {
@@ -33,14 +33,14 @@ class Generator {
                 def didUpdate = tile.update(collapsed, n[1], this.rules)
 
                 if(didUpdate){
-                    if(!updated.contains(tile.id) && !tile.isCollapsed() && updated.size() <= 50){
+                    if(!updated.contains(tile.id) && !tile.isCollapsed()){
                          q << tile
                     }
                     updated.add(tile.id)
                 }
             } 
         }
-
+        
         return updated
     }
 
