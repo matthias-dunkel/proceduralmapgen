@@ -20,6 +20,10 @@ class Rule {
         this.o = o
     }
 
+    String toString() {
+        return "($t1, $t2, $o)"
+    }
+
     Set<TileType> apply(TileType type1, TileType type2, Orientation o) {
         if(type1 == this.t1 && type2 == this.t2 && this.o == o) {
             return [this.t2] as Set
