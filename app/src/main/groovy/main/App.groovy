@@ -12,15 +12,20 @@ class App {
 
         Map map = new Map(WIDTH,HEIGHT);
         RuleSetGenerator rg = new RuleSetGenerator();
-        Rule[] r = rg.allowAllOrientations([
-            TileType.SAND, 
-            TileType.WATER, 
-            TileType.FOREST,
-            TileType.STONE,
-            TileType.MOUNTAIN_TOP,
-            TileType.MOUNTAIN_BOTTOM
-            ])
-        
+        Rule[] r = rg.allowAllOrientations(TileType.SAND, TileType.SAND) +
+                   rg.allowAllOrientations(TileType.FOREST, TileType.FOREST) +
+                   rg.allowAllOrientations(TileType.WATER, TileType.WATER) +
+                   rg.allowAllOrientations(TileType.STONE, TileType.STONE) + 
+                   rg.allowAllOrientations(TileType.MOUNTAIN_TOP, TileType.MOUNTAIN_TOP) +
+                   rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_BOTTOM) +
+
+                   rg.allowAllOrientations(TileType.WATER, TileType.SAND) + 
+                   rg.allowAllOrientations(TileType.SAND, TileType.STONE) +
+                   rg.allowAllOrientations(TileType.WATER, TileType.FOREST) +
+                   rg.allowAllOrientations(TileType.FOREST, TileType.STONE) +
+                   rg.allowAllOrientations(TileType.STONE, TileType.MOUNTAIN_BOTTOM) +
+                   rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_TOP)
+                   
         def gen = new Generator(map, r)
         def stepwise = new StepWise(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
         def finished = new Finished(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
