@@ -60,7 +60,7 @@ abstract class BufferedDrawer extends MapDrawer {
 		g2d.setColor( color );
 
         def rectangle = new Rectangle()
-        rectangle.setBounds(tile.y * this.scale, tile.x * this.scale, scale, scale)
+        rectangle.setBounds(tile.x * this.scale, tile.y * this.scale, scale, scale)
 
 		g2d.fill( rectangle );
     }
