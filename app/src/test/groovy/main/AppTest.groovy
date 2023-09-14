@@ -86,17 +86,15 @@ class AppTest extends Specification {
 
     def "Tile update works correctly"(){
         setup:
-            def t1 = new Tile(0,0)
-            def t2 = new Tile(0,1)
-            def t3 = new Tile(0,2)
+            def t1 = new Tile(0,0, [TileType.SAND, TileType.WATER] as Set)
+            def t2 = new Tile(0,1, [TileType.SAND, TileType.WATER] as Set)
+            def t3 = new Tile(0,2, [TileType.SAND, TileType.WATER] as Set)
             def rg = new RuleSetGenerator()
             Rule[] ALL_TILES_ALLOWED = 
                 rg.allowAllOrientations(TileType.SAND, TileType.SAND) +
                 rg.allowAllOrientations(TileType.WATER, TileType.WATER) +
-                rg.allowAllOrientations(TileType.FOREST, TileType.FOREST) +
-                rg.allowAllOrientations(TileType.STONE, TileType.STONE) +
-                rg.allowAllOrientations(TileType.MOUNTAIN_TOP, TileType.MOUNTAIN_TOP) +
-                rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_BOTTOM)
+                rg.allowAllOrientations(TileType.SAND, TileType.WATER) 
+                
         
         when:
             t1.collapse()
@@ -104,6 +102,6 @@ class AppTest extends Specification {
             t3.update(t2, Orientation.RIGHT, ALL_TILES_ALLOWED)
         
         then:
-            t2.entropy() == 1 && t3.entropy() == 1
+            t2.entropy() == 2 && t3.entropy() == 2
     }
 }
