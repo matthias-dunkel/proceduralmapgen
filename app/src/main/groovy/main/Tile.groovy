@@ -54,8 +54,6 @@ class Tile {
         return "Tile( $this.id, $this.type, $this.options)"
     }
 
-   
-
     TileType type(){
         return this.type
     }
@@ -81,7 +79,12 @@ class Tile {
         return false;
     }
 
-    boolean update(Tile collapsed, Rule[] rules) {
+    /**
+        @param tile: The neighbour tile, that maybe has changed and this should be updated accordingly to the change made in tile
+        @param o: The Orientation that this is to tile.
+        @param rules: The Rules that should be applied.
+    **/
+    boolean update(Tile tile, Orientation o, Rule[] rules) {
         if(this.isCollapsed()){
             return false;
         }
@@ -89,10 +92,19 @@ class Tile {
         Set<TileType> possible = []
                         
         for(rule in rules) {
-            possible = possible.plus(rule.apply(collapsed))
+            for(opt in this.options){
+                if(tile.isCollapsed()){
+                    possible = possible.plus(rule.apply(tile.type(), opt, o))
+                    continue
+                }
+
+                for(topts in tile.options){
+                    possible = possible.plus(rule.apply(topts, opt, o))
+                }
+            }
         }
 
-        def prev = this.options.size()
+        def prev = this.options.size()        
         this.options = this.options.intersect(possible)
 
         if(this.options.size() == 0) {

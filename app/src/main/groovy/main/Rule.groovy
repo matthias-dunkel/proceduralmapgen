@@ -2,42 +2,40 @@ package main
 
 
 enum Orientation {
-    TOP, BOT, LEFT, RIGHT
+    TOP, BOTTOM, LEFT, RIGHT
 }
 
-class Rule {
-    //Orientation o,
-    TileType tile1
-    TileType tile2
 
-    Rule(TileType t1, TileType t2) {
-        this.tile1 = t1;
-        this.tile2 = t2;
+/**
+* A Rule defines a possible combination of tiles. (T1, T2, LEFT) means, that T2 can be left of T1.
+*/
+class Rule {
+    Orientation o
+    TileType t1
+    TileType t2
+
+    Rule(TileType t1, TileType t2, Orientation o) {
+        this.t1 = t1
+        this.t2 = t2
+        this.o = o
     }
 
-    Set<TileType> apply(TileType type) {
-        if(type == this.tile1) {
-            return [this.tile2] as Set
+    Set<TileType> apply(TileType type1, TileType type2, Orientation o) {
+        if(type1 == this.t1 && type2 == this.t2 && this.o == o) {
+            return [this.t2] as Set
         } 
     
-        if(type == this.tile2) {
-            return [this.tile1] as Set
-        }
         return [] as Set
     }   
-
-    Set<TileType> apply(Tile tile) {
-        if(tile.isCollapsed()){
-            return apply(tile.type())
-        }
-        
-        def newOptions = []
-
-        for(o in tile.options) {
-            newOptions = newOptions.plus(apply(o))
-        }
-
-        return newOptions
-    }
 }
 
+class RuleSetGenerator {
+    Rule[] allowAllOrientations(TileType t1, TileType t2) {
+        return [
+            new Rule(t1, t2, Orientation.TOP),
+            new Rule(t1, t2, Orientation.RIGHT),
+            new Rule(t1, t2, Orientation.LEFT),
+            new Rule(t1, t2, Orientation.BOTTOM)
+        ]
+    }
+}
