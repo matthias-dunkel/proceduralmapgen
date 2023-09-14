@@ -67,20 +67,20 @@ class Map {
         this.tilesSorted = this.tilesSorted.sort { this.getAt(it).entropy() }
     }
 
-    ArrayList<TileId> getNeighbours(TileId id) {
+    ArrayList<Tuple2<TileId, Orientation>> getNeighbours(TileId id) {
         ArrayList<TileId> neighbours = []
       
         if(id.x -1 >= 0) { 
-            neighbours.add(new TileId(id.x -1, id.y))
+            neighbours.add(new Tuple2(new TileId(id.x -1, id.y), Orientation.LEFT))
         }
         if(id.y -1 >= 0) { 
-            neighbours.add(new TileId(id.x, id.y -1))
+            neighbours.add(new Tuple2(new TileId(id.x, id.y -1), Orientation.TOP))
         }
         if(id.x + 1 < this.width){ 
-           neighbours.add(new TileId(id.x +1, id.y))
+           neighbours.add(new Tuple2(new TileId(id.x +1, id.y), Orientation.RIGHT))
         }
         if(id.y + 1 < this.height){
-            neighbours.add(new TileId(id.x, id.y +1))
+            neighbours.add(new Tuple2(new TileId(id.x, id.y +1), Orientation.BOTTOM))
         }
 
         return neighbours

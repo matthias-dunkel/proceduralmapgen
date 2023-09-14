@@ -29,8 +29,8 @@ class Generator {
             def neighbours = this.map.getNeighbours(collapsed.id)
             
             neighbours.collect { n ->
-                def tile = this.map.getAt(n)
-                def didUpdate = tile.update(collapsed, this.rules)
+                def tile = this.map.getAt(n[0])
+                def didUpdate = tile.update(collapsed, n[1], this.rules)
                 
                 if(didUpdate){
                     if(!updated.contains(tile.id) && !tile.isCollapsed()){
