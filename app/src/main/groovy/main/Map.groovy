@@ -5,7 +5,6 @@ class Map {
     int width
     int height
     ArrayList<TileId> tilesSorted
-    int numberOfCollapsed
     
     private ArrayList<Tile> tiles
     
@@ -18,9 +17,7 @@ class Map {
             }
         this.tilesSorted = this.tiles.collect {
             it.id
-        }
-
-        this.numberOfCollapsed = 0;
+        } 
     }
 
     TileId convertIndexToCoord(int id) {
