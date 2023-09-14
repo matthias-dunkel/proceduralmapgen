@@ -42,4 +42,9 @@ class RuleSetGenerator {
             new Rule(t1, t2, Orientation.BOTTOM)
         ]
     }
+
+    // Allow all types to be withitself and with all others.
+    Rule[] allowAllOrientations(ArrayList<TileType> ts) {
+        ts.collect{ tile1 -> ts.collect{ tile2 -> this.allowAllOrientations(tile1, tile2)}  }.flatten()
+    }
 }
