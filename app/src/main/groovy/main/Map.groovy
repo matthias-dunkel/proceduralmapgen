@@ -20,6 +20,18 @@ class Map {
         } 
     }
 
+    Map(int width, int height, Set<TileType> types) {
+        this.width = width;
+        this.height = height;
+        this.tiles = (0..width*height -1).collect{ 
+                def c = convertIndexToCoord(it);
+                new Tile(c.x, c.y, types) 
+            }
+        this.tilesSorted = this.tiles.collect {
+            it.id
+        } 
+    }
+
     TileId convertIndexToCoord(int id) {
         int y = id / this.width
         int x = id % this.width
