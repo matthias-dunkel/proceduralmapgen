@@ -50,6 +50,14 @@ class Tile {
             ]
     }
 
+    Tile(int x, int y, Set<TileType> options) {
+        this.id = new TileId(x,y)
+        this.x = x;
+        this.y = y;
+        this.type = TileType.NOTHING
+        this.options = options
+    }
+
     String toString(){
         return "Tile( $this.id, $this.type, $this.options)"
     }
@@ -81,7 +89,7 @@ class Tile {
 
     /**
         @param tile: The neighbour tile, that maybe has changed and this should be updated accordingly to the change made in tile
-        @param o: The Orientation that this is to tile.
+        @param o: The Orientation that this has to tile.
         @param rules: The Rules that should be applied.
     **/
     boolean update(Tile tile, Orientation o, Rule[] rules) {
@@ -92,17 +100,21 @@ class Tile {
         Set<TileType> possible = []
                         
         for(rule in rules) {
+            //print("Rule: $rule | ")
             for(opt in this.options){
+                //print"UTOption: $opt | "
                 if(tile.isCollapsed()){
                     possible = possible.plus(rule.apply(tile.type(), opt, o))
                     continue
-                }
+                } 
 
                 for(topts in tile.options){
+                    //print("CTOption: $opt")
                     possible = possible.plus(rule.apply(topts, opt, o))
                 }
             }
         }
+        //println("Possble: $possible")
 
         def prev = this.options.size()        
         this.options = this.options.intersect(possible)
