@@ -9,8 +9,8 @@ Inspired by the Wave Function Collapse Algorithm, this project delves into the g
 
 Execute `gradle run`. After some seconds building a window should open and the map is generated and visualized.
 
-# How to use:
-## Settings:
+# How to use
+## Settings
 In the `App.groovy` you can change the `WIDTH` (Width of the map), `HEIGHT` (Height of the map) and the `SCALE` (Size of the Tiles in Renderer.)
 
 ## Renderers
@@ -27,3 +27,9 @@ If you choose too strict rules, the algorithm may come in a state of contradicti
 The algorithm is not optimized yet. For large Maps the algortihm will take longer time.
 
 A good start is a 20x20 Map.
+
+## Examples
+For both examples, the same ruleset was used. It is standard ruleset defined in the App class main function.
+
+![Forest](/output/20x20.png)
+![Forest](/output/20x20-mountains.png)
