@@ -52,7 +52,7 @@ class Generator {
         def minTile = this.map.lowestEntropy()
         def didCollapse = minTile.collapse()
         if(didCollapse) {
-            this.map.removeFirstFromSorted()
+            this.map.removeFromSorted(minTile.id)
         }
 
         this.numberOfCollapsed++

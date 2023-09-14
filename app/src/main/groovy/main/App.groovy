@@ -30,7 +30,7 @@ class App {
         def gen = new Generator(map, r)
         def stepwise = new StepWise(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
         def finished = new Finished(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
-        def renderer = new Renderer(finished)
+        def renderer = new Renderer(stepwise)
 
         renderer.setUpGui()
 

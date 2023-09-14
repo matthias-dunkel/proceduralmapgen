@@ -58,10 +58,9 @@ class Map {
         return tile
     }
 
-    void removeFirstFromSorted() {
-        if(this.tilesSorted.size() > 0){
-            this.tilesSorted.remove(0)
-        }
+    void removeFromSorted(TileId id) {
+        def i = this.tilesSorted.findIndexOf{it == id} 
+        this.tilesSorted.remove(i)
     }
 
     void sortTiles() {
