@@ -5,7 +5,6 @@ enum Orientation {
     TOP, BOTTOM, LEFT, RIGHT
 }
 
-
 /**
 * A Rule defines a possible combination of tiles. (T1, T2, LEFT) means, that T2 can be left of T1.
 */
@@ -37,9 +36,13 @@ class RuleSetGenerator {
     Rule[] allowAllOrientations(TileType t1, TileType t2) {
         return [
             new Rule(t1, t2, Orientation.TOP),
+            new Rule(t2, t1, Orientation.TOP),
             new Rule(t1, t2, Orientation.RIGHT),
+            new Rule(t2, t1, Orientation.RIGHT),
             new Rule(t1, t2, Orientation.LEFT),
-            new Rule(t1, t2, Orientation.BOTTOM)
+            new Rule(t2, t1, Orientation.LEFT),
+            new Rule(t1, t2, Orientation.BOTTOM),
+            new Rule(t2, t1, Orientation.BOTTOM)
         ]
     }
 
