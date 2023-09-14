@@ -8,7 +8,7 @@ import spock.lang.Specification
 class AppTest extends Specification {
     def "calculate correct id"(){
         setup:
-        Board b = new Board(2,3)
+        Map b = new Map(2,3)
 
         when:
             def r1 = b.convertIndexToCoord(0)
@@ -28,7 +28,7 @@ class AppTest extends Specification {
 
     def "getAt works"(){
         setup:
-        Board b = new Board(2,3)
+        Map b = new Map(2,3)
 
         when:
             def result = b.getAt(new TileId(0, 0))

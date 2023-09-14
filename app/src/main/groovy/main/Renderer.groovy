@@ -5,19 +5,19 @@ import java.awt.*
 import java.awt.event.*
 import java.awt.image.*
 
-abstract class BoardDrawer extends JPanel {
+abstract class MapDrawer extends JPanel {
     int width;
     int height;
     int scale;
     
-    protected Board board;
+    protected Map map;
     protected Rule[] rules;
 
-    BoardDrawer(int width, int height, int scale, Board board, Rule[] rules){
+    MapDrawer(int width, int height, int scale, Map map, Rule[] rules){
         this.width = width
         this.height = height
         this.scale = scale
-        this.board = board
+        this.map = map
         this.rules = rules
     }
 
@@ -46,11 +46,11 @@ abstract class BoardDrawer extends JPanel {
     }
 }
 
-abstract class BufferedDrawer extends BoardDrawer {
+abstract class BufferedDrawer extends MapDrawer {
     private BufferedImage image;
 
-    BufferedDrawer(int width, int height, int scale, Board board, Rule[] rules) {
-       super(width, height,scale, board,rules)
+    BufferedDrawer(int width, int height, int scale, Map map, Rule[] rules) {
+       super(width, height,scale, map,rules)
 
        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
     }
@@ -74,15 +74,15 @@ abstract class BufferedDrawer extends BoardDrawer {
 
 class Finished extends BufferedDrawer {
     
-    Finished(int width, int height, int scale, Board board, Rule[] rules) {
-       super(width, height,scale, board,rules)
+    Finished(int width, int height, int scale, Map map, Rule[] rules) {
+       super(width, height,scale, map,rules)
     }
 
     void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        while(board.hasSteps()) {
-            paintToBuffer(board.step(this.rules))
+        while(map.hasSteps()) {
+            paintToBuffer(map.step(this.rules))
         }
 
         drawBuffer(g)
@@ -92,8 +92,8 @@ class Finished extends BufferedDrawer {
 class StepWise extends BufferedDrawer implements ActionListener {
     private Timer timer;
 
-    StepWise(int width, int height, int scale, Board board, Rule[] rules) {
-        super(width, height,scale, board,rules)
+    StepWise(int width, int height, int scale, Map map, Rule[] rules) {
+        super(width, height,scale, map,rules)
 
         this.timer = new Timer(0, this)
 
@@ -106,12 +106,12 @@ class StepWise extends BufferedDrawer implements ActionListener {
     }
 
     void actionPerformed(ActionEvent e) {
-        if(!this.board.hasSteps()){
+        if(!this.map.hasSteps()){
             this.timer.stop()
             return;
         }
 
-        def tile = this.board.step(this.rules)
+        def tile = this.map.step(this.rules)
         paintToBuffer(tile)
         repaint();
     }
@@ -120,9 +120,9 @@ class StepWise extends BufferedDrawer implements ActionListener {
 class Renderer extends JFrame {
     int width;
     int height;
-    BoardDrawer drawer
+    MapDrawer drawer
 
-    Renderer(BoardDrawer drawer) {
+    Renderer(MapDrawer drawer) {
         this.width = drawer.width + 10
         this.height = drawer.height + 50
         this.drawer = drawer

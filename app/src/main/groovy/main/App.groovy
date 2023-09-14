@@ -10,7 +10,7 @@ class App {
         def HEIGHT = 20;
         def SCALE = 15;
 
-        def b = new Board(WIDTH,HEIGHT);
+        def b = new Map(WIDTH,HEIGHT);
         def r = [
             new Rule(TileType.SAND, TileType.SAND),
             new Rule(TileType.FOREST, TileType.FOREST),

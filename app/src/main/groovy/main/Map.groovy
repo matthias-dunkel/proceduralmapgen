@@ -1,6 +1,6 @@
 package main 
 
-class Board {
+class Map {
 
     int width
     int height
@@ -9,7 +9,7 @@ class Board {
     
     private ArrayList<Tile> tiles
     
-    Board(int width, int height){
+    Map(int width, int height){
         this.width = width;
         this.height = height;
         this.tiles = (0..width*height -1).collect{ 
@@ -33,13 +33,13 @@ class Board {
     Tile getAt(TileId id){
         
         if(id.y >= this.height || id.x >= this.width) {
-            throw new IndexOutOfBoundsException("No tile with id: $id for Board with dimensions: $this.width x $this.height")
+            throw new IndexOutOfBoundsException("No tile with id: $id for Map with dimensions: $this.width x $this.height")
         }
         
         def tile = this.tiles[id.y * this.width + id.x]
         
         if(id != tile.id) {
-            throw new RuntimeException("Tiles are not stored correctly in Board. Searched for: $id, got: $tile.id")
+            throw new RuntimeException("Tiles are not stored correctly in Map. Searched for: $id, got: $tile.id")
         }
         return tile
     }
