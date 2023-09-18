@@ -23,6 +23,7 @@ class App {
                    rg.allowAllOrientations(TileType.SAND, TileType.STONE) +
                    rg.allowAllOrientations(TileType.WATER, TileType.FOREST) +
                    rg.allowAllOrientations(TileType.FOREST, TileType.STONE) +
+                   rg.allowAllOrientations(TileType.FOREST, TileType.MOUNTAIN_BOTTOM) +
                    rg.allowAllOrientations(TileType.STONE, TileType.MOUNTAIN_BOTTOM) +
                    rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_TOP)
                    
