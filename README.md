@@ -1,12 +1,15 @@
 # Procedural Map Generation
 Inspired by the Wave Function Collapse Algorithm, this project delves into the generation of simple maps using rulesets.
 
+# Idea
+A map is a grid of tiles. Every tile has a type (for example a color). The algorithm uses rules to define relationships between tile types. The goal of the algorithm is to find a valid assignment of types to tiles without breaking a rule. In the start every tile can have all possible types, but for every step one tile is assigned one type, which then leads to an update of the other tiles, reducing the type options that can be assigned to the tiles.
+
 # Prerequisites
 - Install gradle
 - Install Groovy
 
 # First Run
-Execute `gradle run`. After some seconds building a window should open and the map is generated and visualized.
+A fully working example is shown in the App File. Execute `gradle run` to run the example. After some seconds building, a window should open and the map is generated and visualized.
 
 # How to use
 ## Settings
@@ -25,12 +28,12 @@ All tiles of type `T1` should be allowed to be the left neighbours of all tiles 
 If you choose too strict rules, the algorithm may come in a state of contradiction, and will terminate with an error. In the future there may be a back tracking approach to reduce contradictions.
 
 # What to expect
-The algorithm is not optimized yet. For large Maps the algortihm will take longer time.
+The algorithm is not optimized yet. For large maps the algortihm will take longer time.
 
 A good start is a 20x20 Map.
 
 ## Examples
-For both examples, the same ruleset was used. It is standard ruleset defined in the App class main function.
+For both examples, the same ruleset was used. It is the standard ruleset defined in the App class main function.
 
 ![Forest](/output/20x20.png)
 ![Forest](/output/20x20-mountains.png)
