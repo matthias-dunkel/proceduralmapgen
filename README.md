@@ -8,11 +8,12 @@ A map is a grid of tiles. Every tile has a type (for example a color). The algor
 - Install gradle
 - Install Groovy
 
-# First Run
+# How to use
+
+## First Run
 A fully working example is shown in the App File. Execute `gradle run` to run the example. After some seconds building, a window should open and the map is generated and visualized.
 
-# How to use
-## Settings
+## Map Settings
 In the `App.groovy` you can change the `WIDTH` (Width of the map), `HEIGHT` (Height of the map) and the `SCALE` (Size of the Tiles in Renderer.)
 
 ## Renderers
