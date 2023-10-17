@@ -29,9 +29,10 @@ You can choose between two renderers in the `App` class.
 2. `Finished` will show the end result after the algorithm has completed. This will take time till the result is visualized. 
 
 ## Rules
-You can change the rules. Rules are tuples `(TileType, TileType, Orientation)`, which allow the defined `TileType`s to be neighbours in a specific Orientation. For example:
-All tiles of type `T1` should be allowed to be the left neighbours of all tiles of type `T2`. The according rule would be:
-`(T2, T1, LEFT)` (Spoken: "tiles of type `T2` can have left neihbours of type `T1`"). 
+Rules are tuples `(TileType, TileType, Orientation)`, which allow defined `TileType` to be neighbours in a specific Orientation.
+
+Example:
+The rule `(T2, T1, LEFT)` defines that tiles of type `T2` can have left neihbours of type `T1`.
 
 If you choose too strict rules, the algorithm may come in a state of contradiction, and will terminate with an error. In the future there may be a back tracking approach to reduce contradictions.
 
