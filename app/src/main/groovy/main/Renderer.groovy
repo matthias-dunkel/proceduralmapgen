@@ -1,9 +1,52 @@
 package main
 
 import javax.swing.*
+import javax.imageio.ImageIO;
 import java.awt.*
 import java.awt.event.*
 import java.awt.image.*
+
+import java.util.HashMap;
+import java.util.Map;
+
+interface TextureFactory {
+    public BufferedImage get(TileType t)
+}
+
+class PipeFactory implements TextureFactory {
+    Map<String, BufferedImage> pipetextures;
+    String [] textureFileNames = ["pipelr","pipetb", "pipecross"]
+    PipeFactory(int width, int height){
+        this.pipetextures = new HashMap<>();
+
+        textureFileNames.stream().map( fileName -> {
+            BufferedImage texture = ImageIO.read("app/src/main/resources/" + fileName + ".png");
+            this.pipetextures.put(fileName, texture)
+        })
+
+        this.pipetextures.put("nothing", new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB));
+    }
+
+    public BufferedImage get(TileType t) {
+        switch (t) {
+            case TileType.LR: 
+                this.pipetextures.get("pipelr");
+                break;
+            case TileType.TB: 
+                this.pipetextures.get("pipetb");
+                break;
+            case TileType.CROSS: 
+                this.pipetextures.get("pipecross");
+                break;
+            case TileType.NOTHING: 
+                this.pipetextures.get("nothing");
+                break;
+            default: 
+                throw new Exception("No matching tile type");
+                break;
+        }
+    }
+}
 
 abstract class MapDrawer extends JPanel {
     int width;
@@ -11,58 +54,31 @@ abstract class MapDrawer extends JPanel {
     int scale;
     
     protected Generator gen;
+    protected TextureFactory f;
 
-    MapDrawer(int width, int height, int scale, Generator gen){
+    MapDrawer(int width, int height, int scale, Generator gen, TextureFactory f){
         this.width = width
         this.height = height
         this.scale = scale
         this.gen = gen
-    }
-
-    Color getColor(TileType type) {
-        if(type == TileType.SAND) {
-            return Color.YELLOW
-        } 
-        if(type == TileType.WATER) {
-            return Color.BLUE
-        } 
-        if(type == TileType.FOREST) {
-           return Color.GREEN
-        } 
-        if(type == TileType.STONE) {
-           return Color.DARK_GRAY
-        } 
-        if(type == TileType.MOUNTAIN_BOTTOM) {
-           return Color.GRAY
-        }
-        if(type == TileType.MOUNTAIN_TOP) {
-           return Color.WHITE
-        }
-        if(type == TileType.NOTHING) {
-           return Color.RED
-        }
-    }
+        this.f = f
+    }  
 }
 
 abstract class BufferedDrawer extends MapDrawer {
     private BufferedImage image;
 
-    BufferedDrawer(int width, int height, int scale, Generator gen) {
-       super(width, height,scale, gen)
+    BufferedDrawer(int width, int height, int scale, Generator gen, TextureFactory f) {
+       super(width, height,scale, gen, f)
 
        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
     }
 
     void paintToBuffer(Tile tile) {
-        def color = getColor(tile.type())
+        def texture = this.f.get(tile.type())
         
         def g2d = (Graphics2D)image.getGraphics();
-		g2d.setColor( color );
-
-        def rectangle = new Rectangle()
-        rectangle.setBounds(tile.x * this.scale, tile.y * this.scale, scale, scale)
-
-		g2d.fill( rectangle );
+        g2d.drawImage(texture, tile.x, tile.y, null)
     }
 
     void drawBuffer(Graphics g) {
@@ -72,8 +88,8 @@ abstract class BufferedDrawer extends MapDrawer {
 
 class Finished extends BufferedDrawer {
     
-    Finished(int width, int height, int scale, Generator gen) {
-       super(width, height,scale, gen)
+    Finished(int width, int height, int scale, Generator gen, TextureFactory f) {
+       super(width, height,scale, gen, f)
     }
 
     void paintComponent(Graphics g) {
@@ -90,8 +106,8 @@ class Finished extends BufferedDrawer {
 class StepWise extends BufferedDrawer implements ActionListener {
     private Timer timer;
 
-    StepWise(int width, int height, int scale, Generator gen) {
-        super(width, height,scale, gen)
+    StepWise(int width, int height, int scale, Generator gen, TextureFactory f) {
+        super(width, height,scale, gen, f)
 
         this.timer = new Timer(0, this)
 

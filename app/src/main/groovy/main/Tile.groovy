@@ -1,13 +1,10 @@
 package main 
 
 enum TileType {
-    SAND,
-    WATER,
-    FOREST,
-    STONE,
-    MOUNTAIN_TOP,
-    MOUNTAIN_BOTTOM,
-    NOTHING,
+    LR,
+    CROSS,
+    TB,
+    NOTHING
 }
 
 class TileId {
@@ -41,12 +38,9 @@ class Tile {
         this.y = y;
         this.type = TileType.NOTHING
         this.options = [
-            TileType.SAND, 
-            TileType.WATER, 
-            TileType.FOREST,
-            TileType.STONE,
-            TileType.MOUNTAIN_TOP,
-            TileType.MOUNTAIN_BOTTOM
+            TileType.LR, 
+            TileType.TB,
+            TileType.CROSS
             ]
     }
 

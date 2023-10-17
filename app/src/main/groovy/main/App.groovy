@@ -6,30 +6,27 @@ package main
 class App {
   
     static void main(String[] args) {
-        def WIDTH = 20;
-        def HEIGHT = 20;
-        def SCALE = 15;
+        def WIDTH = 10;
+        def HEIGHT = 10;
+        def SCALE = 125;
 
         Map map = new Map(WIDTH,HEIGHT);
         RuleSetGenerator rg = new RuleSetGenerator();
-        Rule[] r = rg.allowAllOrientations(TileType.SAND, TileType.SAND) +
-                   rg.allowAllOrientations(TileType.FOREST, TileType.FOREST) +
-                   rg.allowAllOrientations(TileType.WATER, TileType.WATER) +
-                   rg.allowAllOrientations(TileType.STONE, TileType.STONE) + 
-                   rg.allowAllOrientations(TileType.MOUNTAIN_TOP, TileType.MOUNTAIN_TOP) +
-                   rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_BOTTOM) +
-
-                   rg.allowAllOrientations(TileType.WATER, TileType.SAND) + 
-                   rg.allowAllOrientations(TileType.SAND, TileType.STONE) +
-                   rg.allowAllOrientations(TileType.WATER, TileType.FOREST) +
-                   rg.allowAllOrientations(TileType.FOREST, TileType.STONE) +
-                   rg.allowAllOrientations(TileType.FOREST, TileType.MOUNTAIN_BOTTOM) +
-                   rg.allowAllOrientations(TileType.STONE, TileType.MOUNTAIN_BOTTOM) +
-                   rg.allowAllOrientations(TileType.MOUNTAIN_BOTTOM, TileType.MOUNTAIN_TOP)
-                   
+        Rule[] r = 
+            rg.allowAllOrientations(TileType.LR, TileType.CROSS) + 
+            rg.allowAllOrientations(TileType.TB, TileType.CROSS) +
+            rg.allowAllOrientations(TileType.CROSS, TileType.CROSS) +
+            [
+                new Rule(TileType.LR, TileType. LR, Orientation.LEFT),
+                new Rule(TileType.LR, TileType. LR, Orientation.RIGHT),
+                new Rule(TileType.TB, TileType. TB, Orientation.TOP),
+                new Rule(TileType.TB, TileType. TB, Orientation.BOTTOM)
+            ]
+        
         def gen = new Generator(map, r)
-        def stepwise = new StepWise(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
-        def finished = new Finished(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen)
+        def fac = new PipeFactory(SCALE, SCALE)
+        def stepwise = new StepWise(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen, fac)
+        def finished = new Finished(WIDTH * SCALE,HEIGHT * SCALE, SCALE, gen, fac)
         def renderer = new Renderer(stepwise)
 
         renderer.setUpGui()
