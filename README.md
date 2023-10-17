@@ -1,9 +1,15 @@
 # Procedural Map Generation
 Inspired by the Wave Function Collapse Algorithm, this project delves into the generation of simple maps using rulesets.
 
-# Idea
-A map is a grid of tiles. Every tile has a type (for example a color). The algorithm uses rules to define relationships between tile types. The goal of the algorithm is to find a valid assignment of types to tiles without breaking a rule. In the start every tile can have all possible types, but for every step one tile is assigned one type, which then leads to an update of the other tiles, reducing the type options that can be assigned to the tiles.
+# Top Level Algorithm
+1. Initialize a grid of tiles with a specified width and height. Initialize every tile with a set of tile type options `O`.  
+2. While a tile exists with a set size larger than 1:
+    1. Choose a tile `t` and choose a tiletype `o` from the options for `t`. This step is called **collapsing**.
+    2. Update tiles recursively with a given rule set `R`, which defines the possible neighbour relationships of possible tiletypes.
 
+Choosing a tile `t` in step 2.1 can be implemented in several different ways. In this project it is implemented by choosing one of the tiles with the least possible options left.
+
+Choosing a tiletype `o` can be implemented in several different ways. In this project `o` is choosen randomly from `O_i`.
 # Prerequisites
 - Install gradle
 - Install Groovy
