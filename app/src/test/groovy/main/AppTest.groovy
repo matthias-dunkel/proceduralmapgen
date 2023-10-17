@@ -49,7 +49,7 @@ class AppTest extends Specification {
             r1 && !r2
     }
 
-    def "getNeighbours worls"(){
+    def "getNeighbours works"(){
         setup:
             def map = new Map(3,3)
         
