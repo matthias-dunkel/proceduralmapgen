@@ -32,7 +32,7 @@ You can choose between two renderers in the `App` class.
 Rules are tuples `(TileType, TileType, Orientation)`, which allow defined `TileType` to be neighbours in a specific Orientation.
 
 Example:
-The rule `(T2, T1, LEFT)` defines that tiles of type `T2` can have left neihbours of type `T1`.
+The rule `(T1, T2, LEFT)` defines that tiles of type `T1` can have left neihbours of type `T2`.
 
 If you choose too strict rules, the algorithm may come in a state of contradiction, and will terminate with an error. In the future there may be a back tracking approach to reduce contradictions.
 
